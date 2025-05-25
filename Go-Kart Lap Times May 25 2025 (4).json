@@ -1,0 +1,84 @@
+[
+  {
+    "id": 1748168605524,
+    "date": "5/25/2025, 12:23:25 PM",
+    "driver": "Ariele Fumagalli",
+    "track": "K1 speed",
+    "time": "0:52.718",
+    "session": "Sessione 1",
+    "lapNumber": 1
+  },
+  {
+    "id": 1748168630881,
+    "date": "5/25/2025, 12:23:50 PM",
+    "driver": "Ariele Fumagalli",
+    "track": "K1 speed",
+    "time": "0:52.430",
+    "session": "Sessione 1",
+    "lapNumber": 2
+  },
+  {
+    "id": 1748168782083,
+    "date": "5/25/2025, 12:26:22 PM",
+    "track": "K1 speed",
+    "time": "0:52.342",
+    "session": "Sessione 1",
+    "lapNumber": 3
+  },
+  {
+    "id": 1748168841097,
+    "date": "5/25/2025, 12:27:21 PM",
+    "track": "K1 speed",
+    "time": "0:51.906",
+    "session": "Sessione 1",
+    "lapNumber": 4
+  },
+  {
+    "id": 1748168872376,
+    "date": "5/25/2025, 12:27:52 PM",
+    "track": "K1 speed",
+    "time": "0:54.237",
+    "session": "Sessione 1",
+    "lapNumber": 5
+  },
+  {
+    "id": 1748169079526,
+    "date": "5/25/2025, 12:31:19 PM",
+    "session": "Sessione 1",
+    "track": "K1 speed",
+    "time": "0:50.639",
+    "lapNumber": 6
+  },
+  {
+    "id": 1748169101734,
+    "date": "5/25/2025, 12:31:41 PM",
+    "session": "Sessione 1",
+    "track": "K1 speed",
+    "time": "0:50.041",
+    "lapNumber": 7
+  },
+  {
+    "id": 1748169142147,
+    "date": "5/25/2025, 12:32:22 PM",
+    "session": "Sessione 1",
+    "track": "K1 speed",
+    "time": "0:51.897",
+    "lapNumber": 8
+  },
+  {
+    "id": 1748169263788,
+    "date": "5/25/2025, 12:34:23 PM",
+    "session": "Sessione 1",
+    "track": "K1 speed",
+    "time": "0:54.911",
+    "lapNumber": 9
+  },
+  {
+    "id": 1748169316401,
+    "date": "5/25/2025, 12:35:16 PM",
+    "session": "Sessione 1",
+    "track": "K1 speed",
+    "time": "0:53.271",
+    "lapNumber": 10
+  }
+]
