@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go-Kart Lap Times Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Go-Kart Lap Times Tracker</h1>
+        
+        <div class="input-section">
+            <h2>Nuovo Giro</h2>
+            <form id="lapForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="sessionName">Sessione:</label>
+                        <select id="sessionName" required>
+                            <option value="Sessione 1">Sessione 1</option>
+                            <option value="Sessione 2">Sessione 2</option>
+                            <option value="Sessione 3">Sessione 3</option>
+                            <option value="Sessione 4">Sessione 4</option>
+                            <option value="Sessione 5">Sessione 5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="lapNumber">Numero Giro:</label>
+                        <input type="number" id="lapNumber" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lapTime">Tempo Giro (mm:ss.ms):</label>
+                        <input type="text" id="lapTime" placeholder="es. 1:23.456" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trackName">Nome Pista:</label>
+                        <input type="text" id="trackName" required>
+                    </div>
+                </div>
+                <button type="submit">Aggiungi Giro</button>
+            </form>
+        </div>
+
+        <div class="stats-section">
+            <h2>Statistiche</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h3>Miglior Tempo</h3>
+                    <p id="bestTime">-</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Tempo Medio</h3>
+                    <p id="avgTime">-</p>
+                </div>
+                <div class="stat-box">
+                    <h3>Numero Giri</h3>
+                    <p id="totalLaps">0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2>Grafico Tempi</h2>
+            <div class="chart-container">
+                <canvas id="lapTimesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="laps-section">
+            <h2>Storico Giri</h2>
+            <div class="filters">
+                <select id="trackFilter">
+                    <option value="all">Tutte le Piste</option>
+                </select>
+                <select id="sessionFilter">
+                    <option value="all">Tutte le Sessioni</option>
+                </select>
+                <button id="downloadBtn" class="download-btn">Salva Dati</button>
+            </div>
+            <div id="sessionsContainer">
+                <!-- Le sessioni verranno inserite qui dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal per la modifica -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Modifica Giro</h2>
+            <form id="editForm">
+                <input type="hidden" id="editLapId">
+                <div class="form-group">
+                    <label for="editSessionName">Sessione:</label>
+                    <select id="editSessionName" required>
+                        <option value="Sessione 1">Sessione 1</option>
+                        <option value="Sessione 2">Sessione 2</option>
+                        <option value="Sessione 3">Sessione 3</option>
+                        <option value="Sessione 4">Sessione 4</option>
+                        <option value="Sessione 5">Sessione 5</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editLapNumber">Numero Giro:</label>
+                    <input type="number" id="editLapNumber" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLapTime">Tempo Giro:</label>
+                    <input type="text" id="editLapTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTrackName">Nome Pista:</label>
+                    <input type="text" id="editTrackName" required>
+                </div>
+                <button type="submit">Salva Modifiche</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
