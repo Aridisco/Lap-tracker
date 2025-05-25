@@ -5,7 +5,7 @@ class LapTimeManager {
         this.laps = JSON.parse(localStorage.getItem('lapTimes')) || [];
         this.laps = this.laps.map(lap => ({
             ...lap,
-            session: 'Sessione 1',
+            session: lap.session || 'Sessione 1',
             lapNumber: lap.lapNumber || 1 // Aggiungi numero giro se non esiste
         }));
         
@@ -14,6 +14,8 @@ class LapTimeManager {
         this.trackFilter = document.getElementById('trackFilter');
         this.sessionFilter = document.getElementById('sessionFilter');
         this.downloadBtn = document.getElementById('downloadBtn');
+        this.loadBtn = document.getElementById('loadBtn');
+        this.fileInput = document.getElementById('fileInput');
         this.modal = document.getElementById('editModal');
         this.closeModal = document.querySelector('.close');
         this.chart = null;
@@ -29,6 +31,8 @@ class LapTimeManager {
         this.trackFilter.addEventListener('change', () => this.updateUI());
         this.sessionFilter.addEventListener('change', () => this.updateUI());
         this.downloadBtn.addEventListener('click', () => this.downloadData());
+        this.loadBtn.addEventListener('click', () => this.fileInput.click());
+        this.fileInput.addEventListener('change', (e) => this.handleFileLoad(e));
         this.closeModal.addEventListener('click', () => this.closeEditModal());
         window.addEventListener('click', (e) => {
             if (e.target === this.modal) {
@@ -435,6 +439,44 @@ class LapTimeManager {
             `;
             container.appendChild(sessionDiv);
         });
+    }
+
+    handleFileLoad(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const loadedData = JSON.parse(e.target.result);
+                if (Array.isArray(loadedData)) {
+                    // Verifica che i dati caricati abbiano la struttura corretta
+                    const validData = loadedData.every(lap => 
+                        lap.hasOwnProperty('session') && 
+                        lap.hasOwnProperty('lapNumber') && 
+                        lap.hasOwnProperty('time') && 
+                        lap.hasOwnProperty('track')
+                    );
+
+                    if (validData) {
+                        this.laps = loadedData;
+                        this.saveToLocalStorage();
+                        this.updateUI();
+                        alert('Dati caricati con successo!');
+                    } else {
+                        alert('Il file JSON non ha il formato corretto. Assicurati che contenga dati validi dei giri.');
+                    }
+                } else {
+                    alert('Il file JSON deve contenere un array di giri.');
+                }
+            } catch (error) {
+                alert('Errore nel caricamento del file. Assicurati che sia un file JSON valido.');
+                console.error('Errore nel caricamento del file:', error);
+            }
+        };
+        reader.readAsText(file);
+        // Reset del file input per permettere il caricamento dello stesso file
+        event.target.value = '';
     }
 }
 
