@@ -128,16 +128,25 @@ class LapTimeManager {
     }
 
     downloadData() {
-        const data = JSON.stringify(this.laps, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `lap-times-${new Date().toISOString().split('T')[0]}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        fetch('http://localhost:3000/save-data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(this.laps)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Dati salvati con successo nel file ${data.filename}`);
+            } else {
+                alert('Errore nel salvataggio dei dati');
+            }
+        })
+        .catch(error => {
+            console.error('Errore:', error);
+            alert('Errore nella comunicazione con il server');
+        });
     }
 
     updateFilters() {
