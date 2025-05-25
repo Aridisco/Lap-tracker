@@ -11,8 +11,6 @@ class LapTimeManager {
         
         this.form = document.getElementById('lapForm');
         this.editForm = document.getElementById('editForm');
-        this.trackFilter = document.getElementById('trackFilter');
-        this.sessionFilter = document.getElementById('sessionFilter');
         this.downloadBtn = document.getElementById('downloadBtn');
         this.loadBtn = document.getElementById('loadBtn');
         this.fileInput = document.getElementById('fileInput');
@@ -28,8 +26,6 @@ class LapTimeManager {
     initializeEventListeners() {
         this.form.addEventListener('submit', (e) => this.handleFormSubmit(e));
         this.editForm.addEventListener('submit', (e) => this.handleEditSubmit(e));
-        this.trackFilter.addEventListener('change', () => this.updateUI());
-        this.sessionFilter.addEventListener('change', () => this.updateUI());
         this.downloadBtn.addEventListener('click', () => this.downloadData());
         this.loadBtn.addEventListener('click', () => this.fileInput.click());
         this.fileInput.addEventListener('change', (e) => this.handleFileLoad(e));
@@ -128,52 +124,16 @@ class LapTimeManager {
     }
 
     downloadData() {
-        fetch('http://localhost:3000/save-data', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(this.laps)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(`Dati salvati con successo nel file ${data.filename}`);
-            } else {
-                alert('Errore nel salvataggio dei dati');
-            }
-        })
-        .catch(error => {
-            console.error('Errore:', error);
-            alert('Errore nella comunicazione con il server');
-        });
-    }
-
-    updateFilters() {
-        const tracks = [...new Set(this.laps.map(lap => lap.track))];
-        const sessions = ['Sessione 1', 'Sessione 2', 'Sessione 3', 'Sessione 4', 'Sessione 5'];
-
-        this.trackFilter.innerHTML = '<option value="all">Tutte le Piste</option>';
-        this.sessionFilter.innerHTML = '<option value="all">Tutte le Sessioni</option>';
-
-        tracks.forEach(track => {
-            this.trackFilter.innerHTML += `<option value="${track}">${track}</option>`;
-        });
-
-        sessions.forEach(session => {
-            this.sessionFilter.innerHTML += `<option value="${session}">${session}</option>`;
-        });
-    }
-
-    getFilteredLaps() {
-        const selectedTrack = this.trackFilter.value;
-        const selectedSession = this.sessionFilter.value;
-
-        return this.laps.filter(lap => {
-            const trackMatch = selectedTrack === 'all' || lap.track === selectedTrack;
-            const sessionMatch = selectedSession === 'all' || lap.session === selectedSession;
-            return trackMatch && sessionMatch;
-        });
+        const data = JSON.stringify(this.laps, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `lap-times-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
     calculateSessionStats(laps) {
@@ -371,9 +331,7 @@ class LapTimeManager {
     }
 
     updateUI() {
-        this.updateFilters();
-        const filteredLaps = this.getFilteredLaps();
-        const stats = this.calculateSessionStats(filteredLaps);
+        const stats = this.calculateSessionStats(this.laps);
 
         // Aggiorna le statistiche generali
         document.getElementById('bestTime').textContent = stats.bestTime;
@@ -381,11 +339,11 @@ class LapTimeManager {
         document.getElementById('totalLaps').textContent = stats.totalLaps;
 
         // Aggiorna il grafico
-        this.updateChart(filteredLaps);
+        this.updateChart(this.laps);
 
         // Raggruppa i giri per sessione
         const sessions = {};
-        filteredLaps.forEach(lap => {
+        this.laps.forEach(lap => {
             if (!sessions[lap.session]) {
                 sessions[lap.session] = [];
             }
