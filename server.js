@@ -24,7 +24,7 @@ app.post('/save-data', (req, res) => {
         return res.status(400).json({ success: false, error: 'Dati non validi' });
     }
 
-    const timestamp = new Date().toISOString().split('T')[0];
+    const timestamp = new Date().toISOString().replace(/:/g, '-').split('.')[0];
     const filename = `lap-times-${timestamp}.json`;
     const userDir = path.join(dataDir, username);
 
