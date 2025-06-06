@@ -13,6 +13,9 @@ class LapTimeManager {
         this.editForm = document.getElementById('editForm');
         this.downloadBtn = document.getElementById('downloadBtn');
         this.loadBtn = document.getElementById('loadBtn');
+        this.saveServerBtn = document.getElementById('saveServerBtn');
+        this.loadServerBtn = document.getElementById('loadServerBtn');
+        this.usernameInput = document.getElementById('username');
         this.fileInput = document.getElementById('fileInput');
         this.modal = document.getElementById('editModal');
         this.closeModal = document.querySelector('.close');
@@ -28,6 +31,8 @@ class LapTimeManager {
         this.editForm.addEventListener('submit', (e) => this.handleEditSubmit(e));
         this.downloadBtn.addEventListener('click', () => this.downloadData());
         this.loadBtn.addEventListener('click', () => this.fileInput.click());
+        this.saveServerBtn.addEventListener('click', () => this.saveToServer());
+        this.loadServerBtn.addEventListener('click', () => this.loadFromServer());
         this.fileInput.addEventListener('change', (e) => this.handleFileLoad(e));
         this.closeModal.addEventListener('click', () => this.closeEditModal());
         window.addEventListener('click', (e) => {
@@ -406,6 +411,58 @@ class LapTimeManager {
             `;
             container.appendChild(sessionDiv);
         });
+    }
+
+    async saveToServer() {
+        const username = this.usernameInput.value.trim();
+        if (!username) {
+            alert('Inserisci uno username');
+            return;
+        }
+        try {
+            const response = await fetch('/save-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, data: this.laps })
+            });
+            const result = await response.json();
+            if (result.success) {
+                alert('Dati salvati sul server!');
+            } else {
+                alert('Errore nel salvataggio sul server');
+            }
+        } catch (error) {
+            alert('Errore nel salvataggio sul server');
+            console.error(error);
+        }
+    }
+
+    async loadFromServer() {
+        const username = this.usernameInput.value.trim();
+        if (!username) {
+            alert('Inserisci uno username');
+            return;
+        }
+        try {
+            const files = await fetch(`/list-files?username=${encodeURIComponent(username)}`).then(r => r.json());
+            if (!files.length) {
+                alert('Nessun file trovato');
+                return;
+            }
+            const file = files[files.length - 1];
+            const data = await fetch(file.path).then(r => r.json());
+            if (Array.isArray(data)) {
+                this.laps = data;
+                this.saveToLocalStorage();
+                this.updateUI();
+                alert('Dati caricati dal server!');
+            } else {
+                alert('Formato dati non valido');
+            }
+        } catch (error) {
+            alert('Errore nel caricamento dal server');
+            console.error(error);
+        }
     }
 
     handleFileLoad(event) {
